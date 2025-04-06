@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Interactive Letter</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #ffc0cb; /* pink background */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .heart {
+      position: absolute;
+      color: red;
+      font-size: 24px;
+      animation: flash 1.5s infinite;
+      pointer-events: none;
+    }
+
+    @keyframes flash {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+
+    .envelope {
+      position: relative;
+      width: 300px;
+      height: 200px;
+      background: url('output.png') no-repeat center/cover;
+      cursor: pointer;
+      z-index: 2;
+    }
+
+    .paper {
+      position: absolute;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%) scaleY(0);
+      width: 260px;
+      height: 160px;
+      background-color: #fff8dc;
+      border: 1px solid #aaa;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      padding: 15px;
+      border-radius: 10px;
+      text-align: center;
+      transition: transform 0.6s ease;
+      z-index: 1;
+    }
+
+    .paper.show {
+      transform: translateX(-50%) scaleY(1);
+    }
+  </style>
+</head>
+<body>
+  <!-- Flashing hearts -->
+  <div class="heart" style="top: 10%; left: 20%;">❤️</div>
+  <div class="heart" style="top: 30%; left: 70%; animation-delay: 0.5s;">💖</div>
+  <div class="heart" style="top: 60%; left: 40%; animation-delay: 1s;">💕</div>
+  <div class="heart" style="top: 80%; left: 80%; animation-delay: 1.5s;">💓</div>
+  <div class="heart" style="top: 50%; left: 10%; animation-delay: 2s;">💗</div>
+
+  <div class="envelope" id="envelope">
+    <div class="paper" id="paper"></div>
+  </div>
+
+  <script>
+    const envelope = document.getElementById('envelope');
+    const paper = document.getElementById('paper');
+    const messages = [
+        "Chào iem!",
+      "Gì chứ từ lúc gặp em là tôi thấy hơi hơi bị confuse",
+      "Chả biết từ lúc nào mà tôi thấy em là hơi hơi bị đặc biệt ",
+      "Cũng chả biết nên mở lời với em vì xin lỗi em tôi là người hơi hơi kiệm lời",
+      "Nên mới làm trò ni hehe",
+      "Nhưng mà tóm lại thì tôi cũng hơi hơi bị thích em",
+      "Xin lỗi nhưng mà cho tôi biết rõ suy nghĩ của em đi !!!"
+    ];
+
+    let open = false;
+
+    function typeWriter(text, element, speed, callback) {
+      element.textContent = "";
+      let i = 0;
+      const type = () => {
+        if (i < text.length) {
+          element.textContent += text.charAt(i);
+          i++;
+          setTimeout(type, speed);
+        } else if (callback) {
+          callback();
+        }
+      };
+      type();
+    }
+
+    envelope.addEventListener('click', () => {
+      if (open) return;
+      open = true;
+      paper.classList.add('show');
+
+      let i = 0;
+      
+      const showMessage = () => {
+        if (i < messages.length - 1) {
+          typeWriter(messages[i], paper, 50, () => {
+            setTimeout(() => {
+              i++;
+              showMessage();
+            }, 6000);
+          });
+        } else {
+          typeWriter(messages[i], paper, 50);
+         // Last message stays
+        }
+      };
+
+      showMessage();
+    });
+  </script>
+</body>
+</html>
